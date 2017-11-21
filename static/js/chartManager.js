@@ -17,9 +17,10 @@ function formatYearAndMonth(date){
       insert data in it,
       -> return chart data ready to be loaded.
     - loadData () : load data in the binded jsdelivr
-    - getData () : fetch data.marincounty.org's data with an AJAX request, when
+    - getData (date) : fetch data.marincounty.org's data with an AJAX request, when
       the data is fetched, it extracts immediatly an aggregated form on it, ready
-      to be sorted.
+      to be sorted. It takes in param a date, the data retrieved will be the data
+      associated to the month of this date.
 */
 var chartManager = {
   data : [],
@@ -29,6 +30,7 @@ var chartManager = {
   settings : {
     bindTo : '#chart',
     defaultText : 'Nothing to display, please choose a(nother) date below',
+    loadingGif : 'loading.gif',
     xLabel : 'Total contracts amount by department',
     yLabel : 'Contracts amount ($)',
   },
@@ -101,6 +103,7 @@ var chartManager = {
     var dataQuery =
       "https://data.marincounty.org/resource/mw3d-ud6d.json?\
 $where=month_and_year='"+formatYearAndMonth(date)+"'"
+    $(this.settings.bindTo).html('<img src="/img/'+this.settings.loadingGif+'">')
     $.ajax({
       url : dataQuery,
       type : 'GET',
