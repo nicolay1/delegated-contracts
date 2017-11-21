@@ -1,0 +1,59 @@
+/* general dom styling */
+html,body{
+  font-size: 1.1em;
+  font-family: 'Roboto', sans-serif;
+}
+a{
+  text-decoration: none;
+  color:#55F;
+}
+h1{
+  text-align: center;
+}
+footer{
+  font-size: 0.8em;
+  color:#888;
+  text-align: right;
+}
+
+/* general style class */
+.bottomSep{
+  border-bottom: 1px solid #AAA;
+  padding-bottom: 5px;
+}
+.info{
+  color:#AAA;
+  font-size: 0.8em;
+  margin-bottom: 0;
+  font-weight: lighter;
+}
+.center{
+  text-align: center;
+}
+.box{
+  box-shadow: 1px 1px 3px grey;
+  margin: 10px;
+  padding: 5px;
+}
+
+/* chart css */
+.chartWrapper{
+  position: relative;
+  padding: 10px;
+  text-align: center;
+}
+.sortButton{
+  font-size: 0.8em;
+  border-radius: 2px;
+}
+
+/* date picker UI fix */
+.ui-datepicker{
+  font-size: 12px;
+}
+#startDate{
+  font-size: 16px;
+}
+.ui-datepicker-calendar {
+  display: none;
+}
