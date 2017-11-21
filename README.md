@@ -4,6 +4,15 @@
 
 This project gives access to the contracts under 50,000$ in Marin County, CA, that are approved by a County Official delegated by the Board of Supervisors. It take part of a coding challenge by Bouquet.ai.
 
+### launching
+
+`git clone https://github.com/nicolay1/delegated-contracts`
+`cd delegated-contracts`
+`npm install`
+`node index.js`
+
+PORT env var is available to choose port (3000 by default)
+
 ### chartManager
 
 This object which can be found in `/static/js/chartManager.js`.
@@ -28,6 +37,7 @@ This object which can be found in `/static/js/chartManager.js`.
     associated to the month of this date.
 
 ### Libraries used
+
 - Jquery (+ui) (CDN)
 - C3.js (CDN)
 - D3.js (CDN)
