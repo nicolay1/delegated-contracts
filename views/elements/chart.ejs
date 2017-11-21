@@ -1,0 +1,120 @@
+<div id="chart"></div>
+<label for="startDate">Date :</label>
+<input name="startDate" id="startDate" class="date-picker" />
+<p class="info">Select a date above to get amount per department for this month</p>
+<script>
+  window.onload = function(){
+    function formatYearAndMonth(date){
+      return date.getFullYear()+"-"+(date.getMonth() < 10 ? "0"+date.getMonth() : date.getMonth())
+    }
+    /* chart manager */
+    var chartManager = {
+      data : [],
+      chart : undefined,
+      settings : {
+        bindTo : '#chart',
+        xLabel : 'Total contracts amount by department',
+        yLabel : 'Contracts amount ($)',
+      },
+      insertDataInParams : function(depList,amountList){
+        return {
+          bindto: chartManager.settings.bindTo,
+          data : {
+            columns : amountList,
+            type: 'bar',
+          },
+          axis: {
+              x: {
+                  type: 'category',
+                  categories: depList,
+                  tick : {
+                    rotate: 60,
+                    width: 100,
+                    height: 60,
+                    multiline:true,
+                  }
+              },
+              y: {
+                label:{
+                  text:this.settings.yLabel,
+                  position:'outer-middle'
+                }
+              }
+          }
+        }
+      },
+      loadData : function(){
+        var departmentList = _.concat(_.map(this.data,(department) => department.department))
+        var amountList = [
+          _.concat([this.settings.xLabel],_.map(this.data,(department) => department.amount))
+        ]
+        console.log(amountList,departmentList)
+        if(this.chart === undefined){
+          chartManager.chart = c3.generate(
+            this.insertDataInParams(departmentList,amountList)
+          )
+        }else{
+          chartManager.chart = c3.generate(
+            this.insertDataInParams(departmentList,amountList)
+          )
+        }
+      },
+      getData : function(date){
+        var dataQuery =
+          "https://data.marincounty.org/resource/mw3d-ud6d.json?\
+$where=month_and_year='"+formatYearAndMonth(date)+"'"
+        $.ajax({
+          url : dataQuery,
+          type : 'GET',
+          contentType : "application/json",
+          dataType: 'json',
+          success : function(data, statut){
+            /*
+               some "optimised" and "pratical" agregation
+               The final data array may be use to perform sort, by department or
+               amount.
+               (use of lodash functions as "optimised" function)
+               1st step : group amount defined contracts by department
+               2nd step : agregate contract's amount in each department
+                 there is an integer parsing needed for amount values.
+                 We note that this parsing can't be done before (it would need
+                 a Object.assign call which would may not be optimised in this
+                 context)
+            */
+            var groupedData = _.groupBy(
+              _.filter(data,(contract) => contract.amount !== undefined),
+              (contract) => contract.department
+            )
+            console.log(groupedData)
+            chartManager.data = _.map(Object.keys(groupedData),(department) => {
+              return {
+                  department : department,
+                  amount : _.sum(
+                    _.map(
+                      groupedData[department],
+                      (contract) => parseInt(contract.amount)
+                    )
+                  )
+                }
+              }
+            )
+            chartManager.loadData()
+          } // success end
+        });
+      }
+    }
+
+    /* date picker setting */
+    $('.date-picker').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat: 'MM yy',
+        onClose: function(dateText, inst) {
+            var dataDate = new Date(inst.selectedYear, inst.selectedMonth, 1)
+            $(this).datepicker('setDate', dataDate);
+            chartManager.getData(dataDate);
+        }
+    })
+  }
+</script>
