@@ -7,7 +7,7 @@ This project gives access to the contracts under 50,000$ in Marin County, CA, th
 ### launching
 
 ```
-git clone https://github.com/nicolay1/delegated-contracts
+git clone https://github.com/wesfox/delegated-contracts
 cd delegated-contracts
 npm install
 node index.js
